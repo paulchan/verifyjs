@@ -145,8 +145,8 @@
 				var exact = parseInt(exactOrLower, 10);
 				if(r.val().length !== exact) {
 					r.messages.exact = r.messages.exact.replace(/#exact#/g, exact);
+					return r.messages.exact;
 				}
-				return r.messages.exact;
 			} else if(exactOrLower !== undefined && upper !== undefined) {
 				var lower = parseInt(exactOrLower, 10);
 				upper = parseInt(upper, 10);
