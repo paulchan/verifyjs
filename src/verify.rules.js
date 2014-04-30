@@ -132,23 +132,39 @@
         return "Must be 10 digits long";
       return true;
     },
-    size: function(r){
-      var v = r.val(), exactOrLower = r.args[0], upper = r.args[1];
-      if(exactOrLower !== undefined && upper === undefined) {
-        var exact = parseInt(exactOrLower, 10);
-        if(r.val().length !== exact)
-          return  "Must be "+exact+" characters";
-      } else if(exactOrLower !== undefined && upper !== undefined) {
-        var lower = parseInt(exactOrLower, 10);
-        upper = parseInt(upper, 10);
-        if(v.length < lower || upper < v.length)
-          return "Must be between "+lower+" and "+upper+" characters";
-      } else {
-        r.warn("size validator parameter error on field: " + r.field.attr('name'));
-      }
-
-      return true;
-    },
+	size: {
+		fn: function(r) {
+			return r.fieldSize(r);
+		},
+		
+		fieldSize: function(r){
+		    var v = r.val(), exactOrLower = r.args[0], upper = r.args[1];
+			var size_error 	= "size validator parameter error on field: ";
+		
+			if(exactOrLower !== undefined && upper === undefined) {
+				var exact = parseInt(exactOrLower, 10);
+				if(r.val().length !== exact) {
+					r.messages.exact = r.messages.exact.replace(/#exact#/g, exact);
+				}
+				return r.messages.exact;
+			} else if(exactOrLower !== undefined && upper !== undefined) {
+				var lower = parseInt(exactOrLower, 10);
+				upper = parseInt(upper, 10);
+				if(v.length < lower || upper < v.length) {
+					r.messages.between = r.messages.between.replace(/#lower#/g, lower);
+					r.messages.between = r.messages.between.replace(/#upper#/g, upper);
+					return r.messages.between;
+				}
+			} else {
+				r.warn(size_error + r.field.attr('name'));
+			}
+			return true;
+		},
+		messages: {
+			exact: "Must be #exact# characters",
+			between: "Must be between #lower# and #upper# characters"
+		}
+	},
     min: function(r) {
       var v = r.val(), min = parseInt(r.args[0], 10);
       if(v.length < min)
