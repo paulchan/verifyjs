@@ -309,7 +309,8 @@ var ruleManager = null;
     getRawRule: getRawRule,
     parseString: parseString,
     parseAttribute: parseAttribute,
-    parseElement: parseElement
+    parseElement: parseElement,
+    updateRules: updateRules
   };
 
 }());
